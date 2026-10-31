@@ -80,4 +80,29 @@ class CategoryTest extends TestCase
             ]
         ]);
     }
+
+    public function testNestedResource()
+    {
+        $this->seed(CategorySeeder::class);
+
+        $category = Category::all();
+        assertNotNull($category);
+        $this->get("/api/categories-custom")
+        ->assertStatus(200)
+        ->assertJson([
+            'total'=>2,
+            'data'=>[
+                [
+                    'id'=>$category[0]->id,
+                    'name'=>$category[0]->name,
+                   
+                ],
+                [
+                    'id'=>$category[1]->id,
+                    'name'=>$category[1]->name,
+                    
+                ]
+            ]
+        ]);
+    }
 }
