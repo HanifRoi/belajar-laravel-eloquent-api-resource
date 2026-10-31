@@ -43,7 +43,9 @@ Route::get('/categories-custom', function(){
 Route::get('products/{id}', function($id){
     $products = Product::findOrFail($id);
     $products->load('category');
-    return new ProductResource($products);
+    return (new ProductResource($products))
+    ->response()
+    ->header('AW', 'AW');
 });
 
 Route::get('/products', function(){
