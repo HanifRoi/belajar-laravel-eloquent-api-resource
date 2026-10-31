@@ -59,4 +59,38 @@ class ProductTest extends TestCase
         assertNotNull($response->json('meta'));
         assertNotNull($response->json('data'));
     }
+
+    public function testAdditionalMetadata()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class]);
+        $product = Product::first();
+        $response = $this->get("/api/products-debug/" . $product->id)
+        ->assertStatus(200)
+        ->assertJson([
+            'author'=>'Hanif Ganteng Roihan',
+            'data'=>[
+                'id'=>$product->id,
+                'name'=>$product->name,
+                'price'=>$product->price
+            ]
+        ]);
+    }
+
+    public function testAdditionalMetadataDinamis()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class]);
+        $product = Product::first();
+        $response = $this->get("/api/products-debug/" . $product->id)
+        ->assertStatus(200)
+        ->assertJson([
+            'author'=>'Hanif Ganteng Roihan',
+            'data'=>[
+                'id'=>$product->id,
+                'name'=>$product->name,
+                'price'=>$product->price
+            ]
+        ]);
+
+        assertNotNull($response->json('server_time'));
+    }
 }
