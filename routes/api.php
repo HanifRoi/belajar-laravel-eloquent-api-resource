@@ -42,11 +42,12 @@ Route::get('/categories-custom', function(){
 
 Route::get('products/{id}', function($id){
     $products = Product::findOrFail($id);
+    $products->load('category');
     return new ProductResource($products);
 });
 
 Route::get('/products', function(){
-    $products = Product::all();
+    $products = Product::with('category')->get();
     return new ProducCollection($products);
 });
 
