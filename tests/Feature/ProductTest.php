@@ -8,6 +8,8 @@ use Database\Seeders\ProductSeeder;
 
 use Tests\TestCase;
 
+use function PHPUnit\Framework\assertContains;
+
 class ProductTest extends TestCase
 {
     public function testProduct()
@@ -29,5 +31,20 @@ class ProductTest extends TestCase
                 'updated_at'=>$product->updated_at->toJson()
             ]
         ]);
+    }
+
+    public function testDataWrapCollection()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class]);
+        $response = $this->get('/api/products')
+        ->assertStatus(200);
+
+        $names = $response->json("data.*.name");
+        for ($i=0; $i < 5; $i++) { 
+            assertContains("Product $i of Food", $names);
+        }
+        for ($i=0; $i < 5; $i++) { 
+            assertContains("Product $i of Gadget", $names);
+        }
     }
 }
